@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+//O CRA, por padrõ, habilita o StrictMode para nossa aplicação, envolvendo o componente principal de nossa árvore com o componente react do strict mode
+//O uso do strict mode garante realiza algumas verificações para garantir um código melhor - podemos ver alertas de problemas potenciais no console do navegador
 ReactDOM.render(
   <React.StrictMode>
     <App />
