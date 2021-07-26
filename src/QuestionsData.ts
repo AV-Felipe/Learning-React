@@ -50,6 +50,13 @@ const questions: QuestionData[] = [
   },
 ];
 
-export const getUnansweredQuestions = (): QuestionData[] => {
+export const getUnansweredQuestions = async (): Promise<QuestionData[]> => {
+  await wait(500);
   return questions.filter((q) => q.answers.length === 0);
+};
+
+//função para simular um delay de uma chamada assincrona e retornar um objeto promise
+//promise é um objeto do JS que representa o sucesso ou falha de uma operação assincrona
+const wait = (ms: number): Promise<void> => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 };
