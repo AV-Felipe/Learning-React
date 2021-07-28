@@ -1,7 +1,7 @@
 import React from 'react';
 import { QuestionData } from './QuestionsData';
 
-//propriedades com uma exclamação são consideradas opcionais, esse é um recurso do typescript que também é válido para parâmetros de funções
+//propriedades com uma interrogação são consideradas opcionais, esse é um recurso do typescript que também é válido para parâmetros de funções
 interface Props {
   data: QuestionData;
   showContent?: boolean;

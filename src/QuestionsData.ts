@@ -50,13 +50,25 @@ const questions: QuestionData[] = [
   },
 ];
 
+//a sintaxe async/await é uma outra forma de função assincrona
+//marcando uma função como async, indicamos que teremos etapas que dependem do retorno de uma promise e deveremos ter um return no final
+//a clause await interrompe a execução das próximas etapas da função até a resolução de uma promise
+//essa interrupção, no entanto, não impede outras funções de serem executadas enquanto a promise não é resolvida
+//a função evocada no await, assim como qualquer função que retorna uma promise, pode ser seguida de .then, .catch e .finally
+//outro formato para uma função assincrona é async função{try{await ...}catch(erro){tratamento}finally{encerramento independente do caso}}
 export const getUnansweredQuestions = async (): Promise<QuestionData[]> => {
   await wait(500);
   return questions.filter((q) => q.answers.length === 0);
 };
 
-//função para simular um delay de uma chamada assincrona e retornar um objeto promise
-//promise é um objeto do JS que representa o sucesso ou falha de uma operação assincrona
+// função para simular um delay de uma chamada assincrona e retornar um objeto promise
+// promise é um objeto do JS que representa o sucesso ou falha de uma operação assincrona
+// resolve é o caso de sucesso
+// reject é o caso de falha
+// para cada aso podemos associar uma função, nesse caso apenas estamos usando o resolve
+// funções que retornam promises podem ser encadeadas com .then(outra função que retorna uma promise) para cada caso de resolve
+// e .catch(função) no caso de reject
+// ao final de tudo podemos ter um .finally(função)
 const wait = (ms: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
