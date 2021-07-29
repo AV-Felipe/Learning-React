@@ -1,8 +1,11 @@
+/**@jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import React from 'react';
 import { QuestionList } from './QuestionList';
 import { getUnansweredQuestions, QuestionData } from './QuestionsData';
 import { Page } from './Page';
 import { PageTitle } from './PageTitle';
+import { PrimaryButton } from './Styles';
 
 export const HomePage = () => {
   //desestruturação de uma useState para armazenarmos os dados das questões
@@ -28,9 +31,17 @@ export const HomePage = () => {
   return (
     <Page>
       <div>
-        <div>
+        <div
+          css={css`
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          `}
+        >
           <PageTitle>Unanswered Questions</PageTitle>
-          <button onClick={handleAskQuestionClick}>Ask a question</button>
+          <PrimaryButton onClick={handleAskQuestionClick}>
+            Ask a question
+          </PrimaryButton>
         </div>
       </div>
       {questionsLoading ? (
