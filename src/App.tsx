@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AskPage } from './pages/AskPage';
 import { SearchPage } from './pages/SearchPage';
 import { SignInPage } from './pages/SignInPage';
+import { NotFoundPage } from './pages/NotFoundPage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="search" element={<SearchPage />} />
           <Route path="ask" element={<AskPage />} />
           <Route path="signin" element={<SignInPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
     </BrowserRouter>
