@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import { gray2, gray3 } from './Styles';
 import React from 'react';
 import { QuestionData } from './QuestionsData';
+import { Link } from 'react-router-dom';
 
 //propriedades com uma interrogação são consideradas opcionais, esse é um recurso do typescript que também é válido para parâmetros de funções
 interface Props {
@@ -22,7 +23,15 @@ export const Question = ({ data, showContent = true }: Props) => (
         font-size: 19px;
       `}
     >
-      {data.title}
+      <Link
+        css={css`
+          text-decoration: none;
+          color: ${gray2};
+        `}
+        to={`/questions/${data.questionId}`}
+      >
+        {data.title}
+      </Link>
     </div>
     {showContent && (
       <div
