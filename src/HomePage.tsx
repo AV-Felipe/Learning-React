@@ -6,6 +6,7 @@ import { getUnansweredQuestions, QuestionData } from './QuestionsData';
 import { Page } from './Page';
 import { PageTitle } from './PageTitle';
 import { PrimaryButton } from './Styles';
+import { useNavigate } from 'react-router'; //this is a hook that returns a function that can be used to perform navigation
 
 export const HomePage = () => {
   //desestruturação de uma useState para armazenarmos os dados das questões
@@ -23,8 +24,9 @@ export const HomePage = () => {
     doGetUnansweresQuestions();
   }, []);
 
+  const navigate = useNavigate();
   const handleAskQuestionClick = () => {
-    console.log('TODO - move to the AskPage');
+    navigate('ask');
   };
   //cada mudança de state provoca uma nova renderização da página, assim, ao alterarmos nossas state variables questions
   //e questionsLoading, provocamos a atualização de todos os elementos vinculados com essas
