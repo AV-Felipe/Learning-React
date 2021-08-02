@@ -80,3 +80,14 @@ export const getQuestion = async (
   const results = questions.filter((q) => q.questionId === questionId);
   return results.length === 0 ? null : results[0];
 };
+
+export const searchQuestions = async (
+  criteria: string
+): Promise<QuestionData[]> => {
+  await wait(500);
+  return questions.filter(
+    (q) =>
+      q.title.toLocaleLowerCase().indexOf(criteria.toLocaleLowerCase()) >= 0 ||
+      q.content.toLocaleLowerCase().indexOf(criteria.toLocaleLowerCase()) >= 0
+  );
+};
