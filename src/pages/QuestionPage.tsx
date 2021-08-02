@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { QuestionData, getQuestion } from '../QuestionsData';
 import { async } from 'q';
 import { number } from 'yargs';
+import { AnswerList } from '../AnswerList';
 
 export const QuestionPage = () => {
   //hook para obter um question data vindo da função getQuestion do componente QuestionData, iniciado como null
@@ -71,6 +72,7 @@ export const QuestionPage = () => {
                 ${question.created.toLocaleDateString()}
                 ${question.created.toLocaleTimeString()}`}
             </div>
+            <AnswerList data={question.answers} />
           </React.Fragment>
         )}
       </div>
