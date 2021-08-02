@@ -5,8 +5,6 @@ import { QuestionList } from '../QuestionList';
 import { searchQuestions, QuestionData } from '../QuestionsData';
 import React from 'react';
 import { Page } from '../Page';
-import { react } from '@babel/types';
-import { async } from 'q';
 
 export const SearchPage = () => {
   const [searchParams] = useSearchParams();
