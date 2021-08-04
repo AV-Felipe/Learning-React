@@ -1,3 +1,4 @@
+import { PageTitle } from './PageTitle';
 //interface é um tipo próprio do typescript (não existe no JS) e é similar ao conceio de interface no c#
 //aqui definimos a estrutura que esperamos para as questões com s quais trabalharemos
 export interface QuestionData {
@@ -10,6 +11,12 @@ export interface QuestionData {
 }
 export interface AnswerData {
   answerId: number;
+  content: string;
+  userName: string;
+  created: Date;
+}
+export interface PostQuestionData {
+  title: string;
   content: string;
   userName: string;
   created: Date;
@@ -90,4 +97,18 @@ export const searchQuestions = async (
       q.title.toLocaleLowerCase().indexOf(criteria.toLocaleLowerCase()) >= 0 ||
       q.content.toLocaleLowerCase().indexOf(criteria.toLocaleLowerCase()) >= 0
   );
+};
+
+export const postQuestion = async (
+  question: PostQuestionData
+): Promise<QuestionData | undefined> => {
+  await wait(500);
+  const questionId = Math.max(...questions.map((q) => q.questionId)) + 1;
+  const newQuestion: QuestionData = {
+    ...question,
+    questionId,
+    answers: [],
+  };
+  questions.push(newQuestion);
+  return newQuestion;
 };
