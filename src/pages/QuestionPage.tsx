@@ -10,14 +10,13 @@ import {
   FormButtonContainer,
   PrimaryButton,
   FieldError,
+  SubmissionSuccess,
 } from '../Styles';
 import { useForm } from 'react-hook-form';
 import React from 'react';
 import { Page } from '../Page';
 import { useParams } from 'react-router-dom';
-import { QuestionData, getQuestion } from '../QuestionsData';
-import { async } from 'q';
-import { number } from 'yargs';
+import { QuestionData, getQuestion, postAnswer } from '../QuestionsData';
 import { AnswerList } from '../AnswerList';
 
 type FormData = {
@@ -25,9 +24,14 @@ type FormData = {
 };
 
 export const QuestionPage = () => {
+  const [successfullySubmitted, setsuccessfullySubmitted] =
+    React.useState(false);
+
   const {
     register,
     formState: { errors },
+    handleSubmit,
+    formState,
   } = useForm<FormData>({
     mode: 'onBlur',
   });
@@ -49,6 +53,16 @@ export const QuestionPage = () => {
       doGetQuestion(Number(questionId));
     }
   }, [questionId]); //o useEffect hook será atualizado sempre que tivermos uma mudança no questionId
+
+  const submitForm = async (data: FormData) => {
+    const result = await postAnswer({
+      questionId: question!.questionId,
+      content: data.content,
+      userName: 'Fredoswaldo',
+      created: new Date(),
+    });
+    setsuccessfullySubmitted(result ? true : false);
+  };
   return (
     <Page>
       <div
@@ -95,11 +109,14 @@ export const QuestionPage = () => {
             </div>
             <AnswerList data={question.answers} />
             <form
+              onSubmit={handleSubmit(submitForm)}
               css={css`
                 margin-top: 20px;
               `}
             >
-              <Fieldset>
+              <Fieldset
+                disabled={formState.isSubmitting || successfullySubmitted}
+              >
                 <FieldContainer>
                   <FieldLabel htmlFor="content">Your Answer</FieldLabel>
                   <FieldTextArea
@@ -123,6 +140,11 @@ export const QuestionPage = () => {
                     Submit Your Answer
                   </PrimaryButton>
                 </FormButtonContainer>
+                {successfullySubmitted && (
+                  <SubmissionSuccess>
+                    Your answer was successfully submited
+                  </SubmissionSuccess>
+                )}
               </Fieldset>
             </form>
           </React.Fragment>
