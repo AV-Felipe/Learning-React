@@ -4,20 +4,19 @@ import { fontFamily, fontSize, gray1, gray2, gray5 } from './Styles';
 import React from 'react';
 import { UserIcon } from './Icons';
 import { Link, useSearchParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+
+type FormData = {
+  search: string;
+};
 
 export const Header = () => {
+  const { register } = useForm<FormData>();
   const [searchParams] = useSearchParams();
   const criteria = searchParams.get('criteria') || '';
 
-  const [search, setSearch] = React.useState(criteria);
-
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.currentTarget.value);
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(search);
   };
   return (
     <div
@@ -48,10 +47,12 @@ export const Header = () => {
       </Link>
       <form onSubmit={handleSubmit}>
         <input
+          //ref={register} padrão usado até a versão 6 do react-hook-form - ver: https://react-hook-form.com/migrate-v6-to-v7/
+          {...register('search')}
+          name="search"
           type="text"
           placeholder="search..."
-          value={search}
-          onChange={handleSearchInputChange}
+          defaultValue={criteria}
           css={css`
             box-sizing: border-box;
             font-family: ${fontFamily};
