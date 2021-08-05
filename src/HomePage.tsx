@@ -2,26 +2,38 @@
 import { css } from '@emotion/react';
 import React from 'react';
 import { QuestionList } from './QuestionList';
-import { getUnansweredQuestions, QuestionData } from './QuestionsData';
+import { getUnansweredQuestions } from './QuestionsData';
 import { Page } from './Page';
 import { PageTitle } from './PageTitle';
 import { PrimaryButton } from './Styles';
 import { useNavigate } from 'react-router'; //this is a hook that returns a function that can be used to perform navigation
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  gettingUnansweredQuestionsAction,
+  gotUnansweredQuestionsAction,
+  AppState,
+} from './Store';
+import { stat } from 'fs';
 
 export const HomePage = () => {
-  //desestruturação de uma useState para armazenarmos os dados das questões
-  //e um segundo para usarmos como flag do carregamento dessas
-  const [questions, setQuestions] = React.useState<QuestionData[]>([]);
-  const [questionsLoading, setQuestionsLoading] = React.useState(true);
+  const dispatch = useDispatch();
+  const questions = useSelector(
+    (state: AppState) => state.questions.unanswered
+  );
+  const questionsLoading = useSelector(
+    (state: AppState) => state.questions.loading
+  );
+
   //useEffect para solicitarmos de forma assincrona os dados das questões ao carregar a página
   //a solicitação assincrona não pode ser feita diretamente pelo useEffect, por isso usamos um callback
   React.useEffect(() => {
     const doGetUnansweresQuestions = async () => {
+      dispatch(gettingUnansweredQuestionsAction());
       const unansweredQuestions = await getUnansweredQuestions();
-      setQuestions(unansweredQuestions);
-      setQuestionsLoading(false);
+      dispatch(gotUnansweredQuestionsAction(unansweredQuestions));
     };
     doGetUnansweresQuestions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const navigate = useNavigate();
