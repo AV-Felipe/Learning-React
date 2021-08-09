@@ -16,14 +16,18 @@ import { useForm } from 'react-hook-form';
 import React from 'react';
 import { Page } from '../Page';
 import { useParams } from 'react-router-dom';
-import { QuestionData, getQuestion, postAnswer } from '../QuestionsData';
+import { getQuestion, postAnswer } from '../QuestionsData';
 import { AnswerList } from '../AnswerList';
+import { useSelector, useDispatch } from 'react-redux';
+import { AppState, gettingQuestionAction, gotQuestionAction } from '../Store';
 
 type FormData = {
   content: string;
 };
 
 export const QuestionPage = () => {
+  const dispatch = useDispatch(); //hook para o envio de actions para a store
+  const question = useSelector((state: AppState) => state.questions.viewing); //hook para recuperar informações da store, passamos o state como argumento e a prop que queremos retornar na função
   const [successfullySubmitted, setsuccessfullySubmitted] =
     React.useState(false);
 
@@ -35,8 +39,6 @@ export const QuestionPage = () => {
   } = useForm<FormData>({
     mode: 'onBlur',
   });
-  //hook para obter um question data vindo da função getQuestion do componente QuestionData, iniciado como null
-  const [question, setQuestion] = React.useState<QuestionData | null>(null);
 
   //hook do React-Router para obter uma propriedade do caminho da url
   const { questionId } = useParams();
@@ -45,13 +47,15 @@ export const QuestionPage = () => {
   React.useEffect(() => {
     //função para podermos executar getQestion, que é assincrono, no useEffect hook
     const doGetQuestion = async (questionId: number) => {
+      dispatch(gettingQuestionAction());
       const foundQuestion = await getQuestion(questionId);
-      setQuestion(foundQuestion);
+      dispatch(gotQuestionAction(foundQuestion));
     };
     //condicional para, caso haja um questionId, converê-lo de string para number e passá-lo para a doGetQuestion
     if (questionId) {
       doGetQuestion(Number(questionId));
     }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questionId]); //o useEffect hook será atualizado sempre que tivermos uma mudança no questionId
 
   const submitForm = async (data: FormData) => {
