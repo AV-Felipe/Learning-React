@@ -2,20 +2,29 @@
 import { css } from '@emotion/react';
 import { useSearchParams } from 'react-router-dom'; //hook para acessar query parameters
 import { QuestionList } from '../QuestionList';
-import { searchQuestions, QuestionData } from '../QuestionsData';
+import { searchQuestions } from '../QuestionsData';
 import React from 'react';
 import { Page } from '../Page';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  AppState,
+  searchingQuestionsAction,
+  searchedQuestionsAction,
+} from '../Store';
 
 export const SearchPage = () => {
+  const dispatch = useDispatch();
+  const questions = useSelector((state: AppState) => state.questions.searched);
   const [searchParams] = useSearchParams();
-  const [questions, setQuestions] = React.useState<QuestionData[]>([]);
   const search = searchParams.get('criteria') || '';
   React.useEffect(() => {
     const doSearch = async (criteria: string) => {
+      dispatch(searchingQuestionsAction());
       const foundResult = await searchQuestions(criteria);
-      setQuestions(foundResult);
+      dispatch(searchedQuestionsAction(foundResult));
     };
     doSearch(search);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   return (
