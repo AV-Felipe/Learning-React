@@ -1,4 +1,5 @@
 import { PageTitle } from './PageTitle';
+import { http } from './http';
 //interface é um tipo próprio do typescript (não existe no JS) e é similar ao conceio de interface no c#
 //aqui definimos a estrutura que esperamos para as questões com s quais trabalharemos
 export interface QuestionData {
@@ -8,6 +9,19 @@ export interface QuestionData {
   userName: string;
   created: Date;
   answers: AnswerData[];
+}
+export interface QuestionDataFromServer {
+  questionId: number;
+  title: string;
+  content: string;
+  userName: string;
+  created: string;
+  answers: Array<{
+    answerId: number;
+    content: string;
+    userName: string;
+    created: string;
+  }>;
 }
 export interface AnswerData {
   answerId: number;
@@ -28,6 +42,19 @@ export interface PostAnswerData {
   userName: string;
   created: Date;
 }
+
+export const mapQuestionFromServer = (
+  question: QuestionDataFromServer
+): QuestionData => ({
+  ...question,
+  created: new Date(question.created),
+  answers: question.answers
+    ? question.answers.map((answer) => ({
+        ...answer,
+        created: new Date(answer.created),
+      }))
+    : [],
+});
 
 const questions: QuestionData[] = [
   {
@@ -71,15 +98,14 @@ const questions: QuestionData[] = [
 //a função invocada no await, assim como qualquer função que retorna uma promise, pode ser seguida de .then, .catch e .finally
 //outro formato para uma função assincrona é async função{try{await ...}catch(erro){tratamento}finally{encerramento independente do caso}}
 export const getUnansweredQuestions = async (): Promise<QuestionData[]> => {
-  let unansweredQuestions: QuestionData[] = [];
-  const response = await fetch(
-    'https://localhost:44369/api/questions/unanswered'
-  );
-  unansweredQuestions = await response.json();
-  return unansweredQuestions.map((question) => ({
-    ...question,
-    created: new Date(question.created),
-  }));
+  const result = await http<QuestionDataFromServer[]>({
+    path: '/questions/unanswered',
+  });
+  if (result.ok && result.body) {
+    return result.body.map(mapQuestionFromServer);
+  } else {
+    return [];
+  }
 };
 
 // função para simular um delay de uma chamada assincrona e retornar um objeto promise
