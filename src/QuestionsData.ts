@@ -68,11 +68,18 @@ const questions: QuestionData[] = [
 //marcando uma função como async, indicamos que teremos etapas que dependem do retorno de uma promise e deveremos ter um return no final
 //a clause await interrompe a execução das próximas etapas da função até a resolução de uma promise
 //essa interrupção, no entanto, não impede outras funções de serem executadas enquanto a promise não é resolvida
-//a função evocada no await, assim como qualquer função que retorna uma promise, pode ser seguida de .then, .catch e .finally
+//a função invocada no await, assim como qualquer função que retorna uma promise, pode ser seguida de .then, .catch e .finally
 //outro formato para uma função assincrona é async função{try{await ...}catch(erro){tratamento}finally{encerramento independente do caso}}
 export const getUnansweredQuestions = async (): Promise<QuestionData[]> => {
-  await wait(500);
-  return questions.filter((q) => q.answers.length === 0);
+  let unansweredQuestions: QuestionData[] = [];
+  const response = await fetch(
+    'https://localhost:44369/api/questions/unanswered'
+  );
+  unansweredQuestions = await response.json();
+  return unansweredQuestions.map((question) => ({
+    ...question,
+    created: new Date(question.created),
+  }));
 };
 
 // função para simular um delay de uma chamada assincrona e retornar um objeto promise
